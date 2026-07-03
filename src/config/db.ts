@@ -12,7 +12,9 @@ types.setTypeParser(1082, (value) =>
 
 export const pool = new Pool({
   connectionString: env.DATABASE_URL,
-  ssl:{ rejectUnauthorized: false }
+  ssl:{ rejectUnauthorized: false },
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 10000,
 });
 
 pool.on("connect", () => {
