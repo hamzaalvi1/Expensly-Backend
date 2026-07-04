@@ -8,9 +8,12 @@
     "seeds": "bun run src/seeds/index.ts"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.8.0",
+    "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.27",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bun": "latest",
