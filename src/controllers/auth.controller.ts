@@ -3,7 +3,6 @@ import type { LoginSchemaType, RegisterSchemaType } from "../validations/auth.sc
 import { createUserService,loginUserService } from "../services/auth.service";
 import { Messages } from "../constants/messages";
 import { HttpStatusCodes } from "../constants/http";
-import { getMeService } from "../services/user.service";
 
 export const registerUser = async (c: Context, data: RegisterSchemaType) => {
   const user = await createUserService(data);
