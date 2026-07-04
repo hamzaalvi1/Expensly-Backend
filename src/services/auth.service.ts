@@ -1,18 +1,19 @@
 import { eq } from "drizzle-orm";
 import { db } from "../config/db";
 import { users } from "../db/schema";
-import { hashPassword } from "../utils/auth";
-import { RegisterSchemaType } from "../validations/auth.schema";
+import { hashPassword, verifyPassword } from "../utils/auth";
+import { LoginSchemaType, RegisterSchemaType } from "../validations/auth.schema";
 import { HTTPException } from "hono/http-exception";
 import { HttpStatusCodes } from "../constants/http";
 import { Messages } from "../constants/messages";
+import { generateToken } from "../utils/jwt";
 
 const findUserByEmail = async (email:string) => {
     const [user] = await db.select().from(users).where(eq(users.email,email)).limit(1);
     return user ?? null;
 }
 
-export const createUser = async (data:RegisterSchemaType) => {
+export const createUserService = async (data:RegisterSchemaType) => {
     const {name, email, password} = data;
     const existingUser = await findUserByEmail(email);
     if(existingUser) throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
@@ -30,4 +31,18 @@ export const createUser = async (data:RegisterSchemaType) => {
     }).then(([user]) => user);
 
     return newUser;
+}
+
+export const loginUserService = async (data:LoginSchemaType) => {
+    const {email, password} = data;
+    const user = await findUserByEmail(email);
+    if(!user) throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: Messages.USER_NOT_FOUND
+    });
+    const isPasswordValid = await verifyPassword(password, user.password);
+    if(!isPasswordValid) throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: Messages.INVALID_PASSWORD
+    });
+    const token = await generateToken({id:user.id, email:user.email,name:user.name});
+    return token;
 }

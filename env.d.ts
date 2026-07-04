@@ -3,5 +3,6 @@ declare module "bun" {
     PORT: string;
     FRONTEND_URLS: string;
     DATABASE_URL: string;
+    JWT_SECRET: string;
   }
 }

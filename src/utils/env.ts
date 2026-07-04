@@ -12,6 +12,7 @@ export const getAllEnv = () => {
         NODE_ENV: getEnv('NODE_ENV'),
         FRONTEND_URLS: parseFrontendUrls(getEnv('FRONTEND_URLS')),
         DATABASE_URL: getEnv('DATABASE_URL'),
+        JWT_SECRET: getEnv('JWT_SECRET'),
     }
 }
 
