@@ -8,4 +8,10 @@ export enum Messages {
     INVALID_PASSWORD = "Invalid password",
     UNAUTHORIZED = "Unauthorized",
     INVALID_TOKEN = "Invalid token",
+    SOMETHING_WENT_WRONG = "Something went wrong",
+    CATEGORY_ALREADY_EXISTS = "Category already exists",
+    CATEGORY_NOT_FOUND = "Category not found",
+    CATEGORY_UPDATED = "Category updated successfully",
+    CATEGORY_DELETED = "Category deleted successfully",
+    CATEGORY_ID_REQUIRED = "Category ID is required",
 }
