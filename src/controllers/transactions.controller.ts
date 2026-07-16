@@ -11,9 +11,20 @@ import {
   SortOrder,
   START_DATE,
 } from "../constants/pagination";
-import { getAllTransactionsService } from "../services/transaction.service";
+import {
+  createTransactionService,
+  deleteTransactionService,
+  getAllTransactionsService,
+  getTransactionByIdService,
+  updateTransactionService,
+} from "../services/transaction.service";
 import { HTTPException } from "hono/http-exception";
 import { Query } from "../constants/query";
+import {
+  createTransactionSchema,
+  updateTransactionSchema,
+} from "../validations/transaction.schema";
+import { zodSchemaValidator } from "../utils/zod-schema-validator";
 
 export const getTransactions = async (c: Context) => {
   try {
@@ -34,17 +45,158 @@ export const getTransactions = async (c: Context) => {
       search,
       startDate,
       endDate,
-      categoryId
+      categoryId,
     };
-    const transactions = await getAllTransactionsService(transactionParams,userId);
+    const transactions = await getAllTransactionsService(
+      transactionParams,
+      userId,
+    );
 
-    return c.json({
+    return c.json(
+      {
         message: Messages.TRANSACTIONS_FETCHED_SUCCESSFULLY,
         data: transactions,
-    }, HttpStatusCodes.OK);
+      },
+      HttpStatusCodes.OK,
+    );
   } catch (error) {
     throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
       message: Messages.SOMETHING_WENT_WRONG,
     });
   }
 };
+
+export const createTransaction = async (c: Context) => {
+  try {
+    const userId = c.get("user").id;
+    const transactionData = await c.req.json();
+    const validatedData = zodSchemaValidator(
+      createTransactionSchema,
+      transactionData,
+    );
+    if (!validatedData.success) {
+      throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: validatedData.error.message,
+      });
+    }
+    const transaction = await createTransactionService(
+      validatedData.data,
+      userId,
+    );
+
+    return c.json(
+      {
+        message: Messages.SUCCESS,
+        data: transaction,
+      },
+      HttpStatusCodes.OK,
+    );
+  } catch (error) {
+    if (error instanceof HTTPException) {
+      throw error;
+    }
+
+    throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
+      message: Messages.SOMETHING_WENT_WRONG,
+    });
+  }
+};
+
+export const deleteTransaction = async (c: Context) => {
+  try {
+    const userId = c.get("user").id;
+    const transactionId = c.req.param("transactionId");
+    if (!transactionId) {
+      throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: Messages.TRANSACTION_ID_REQUIRED,
+      });
+    }
+    const _ = await deleteTransactionService(transactionId, userId);
+    return c.json(
+      {
+        message: Messages.TRANSACTION_DELETED_SUCCESSFULLY,
+      },
+      HttpStatusCodes.OK,
+    );
+  } catch (error) {
+    throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
+      message: Messages.SOMETHING_WENT_WRONG,
+    });
+  }
+};
+export const updateTransaction = async (c: Context) => {
+  try {
+    const transactionId = c.req.param("transactionId");
+    const transactionData = await c.req.json();
+    const userId = c.get("user").id;
+    if (!transactionId) {
+      throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: Messages.TRANSACTION_ID_REQUIRED,
+      });
+    }
+    const validatedData = zodSchemaValidator(
+      updateTransactionSchema,
+      transactionData,
+    );
+    if (!validatedData.success) {
+      return c.json(
+        {
+          message: validatedData.error.message,
+          field: validatedData.error.field,
+        },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+    const transaction = await updateTransactionService(
+      transactionId,
+      userId,
+      validatedData.data,
+    );
+    return c.json(
+      {
+        message: Messages.SUCCESS,
+        data: transaction,
+      },
+      HttpStatusCodes.OK,
+    );
+  } catch (error) {
+    if (error instanceof HTTPException) {
+      return c.json(
+        {
+          message: error.message,
+        },
+        error.status,
+      );
+    }
+    return c.json(
+      {
+        message: Messages.SOMETHING_WENT_WRONG,
+      },
+      HttpStatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+export const getTransactionById = async (c: Context) => {
+  try {
+    const transactionId = c.req.param("transactionId");
+    const userId = c.get("user").id;
+    if (!transactionId) {
+      throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
+        message: Messages.TRANSACTION_ID_REQUIRED,
+      });
+    }
+    const transaction = await getTransactionByIdService(transactionId, userId);
+    return c.json(
+      {
+        message: Messages.TRANSACTION_FETCHED_SUCCESSFULLY,
+        data: transaction,
+      },
+      HttpStatusCodes.OK,
+    );
+  } catch (error) {
+    throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
+      message: Messages.SOMETHING_WENT_WRONG,
+    });
+  }
+};``

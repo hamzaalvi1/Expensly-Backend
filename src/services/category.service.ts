@@ -87,20 +87,17 @@ export const createCategoryService = async (
 };
 
 export const deleteCategoryService = async (categoryId: string, userId: string) => {
-  const [existingCategory] = await db
-    .select()
-    .from(categories)
-    .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
-    .limit(1);
-  if(!existingCategory){
-    throw new HTTPException(HttpStatusCodes.NOT_FOUND, {
-      message: Messages.CATEGORY_NOT_FOUND,
-    })
-  }
   const [category] = await db
     .delete(categories)
     .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
     .returning();
+
+  if (!category) {
+    throw new HTTPException(HttpStatusCodes.NOT_FOUND, {
+      message: Messages.CATEGORY_NOT_FOUND,
+    });
+  }
+
   return category;
 };
 
@@ -109,23 +106,17 @@ export const updateCategoryService = async (
   userId: string,
   categoryData: UpdateCategoryType,
 ) => {
-  const [existingCategory] = await db
-    .select()
-    .from(categories)
-    .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
-    .limit(1);
-
-  if (!existingCategory) {
-    throw new HTTPException(HttpStatusCodes.NOT_FOUND, {
-      message: Messages.CATEGORY_NOT_FOUND,
-    });
-  }
-
   const [category] = await db
     .update(categories)
     .set(categoryData)
     .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
     .returning();
+
+  if (!category) {
+    throw new HTTPException(HttpStatusCodes.NOT_FOUND, {
+      message: Messages.CATEGORY_NOT_FOUND,
+    });
+  }
 
   return category;
 };
