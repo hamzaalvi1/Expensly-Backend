@@ -8,3 +8,13 @@ export interface GetAllCategoriesParams {
     userId: string;
     filterBy?: FilterByType;
 }
+
+export interface GetAllTransactionsParams  {
+    page: number;
+    limit: number;
+    sortBy: SortOrder;
+    search: string;
+    startDate?: string;
+    endDate?: string;
+    categoryId?: string;
+}

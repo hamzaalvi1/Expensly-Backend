@@ -9,6 +9,8 @@ export enum DEFAULT_PAGINATION {
     SORT = "createdAt",
     ORDER = SortOrder.DESC,
     SEARCH = "",
+    START_DATE = "",
+    END_DATE = "",
 };
 
 export const PAGE = 'page';
@@ -17,6 +19,8 @@ export const SORT = 'sort';
 export const ORDER = 'order';
 export const SEARCH = 'search';
 export const FILTER_BY = 'filterBy';
+export const START_DATE = 'startDate';
+export const END_DATE = 'endDate';
 
 export enum FilterBy {
     EXPENSE = "EXPENSE",

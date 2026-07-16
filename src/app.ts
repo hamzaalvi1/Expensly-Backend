@@ -4,6 +4,7 @@ import { withApiPrefix } from "./utils/api";
 import { HttpMessages, HttpStatusCodes } from "./constants/http";
 import { authRoutes, authPrefix } from "./routes/auth.route";
 import { categoriesPrefix, categoriesRoutes } from "./routes/categories.route";
+import { transactionPrefix, transactionRoutes } from "./routes/transaction.route";
 
 const app = new Hono();
 
@@ -12,6 +13,8 @@ app.use(withApiPrefix('/*'),corsMiddleware);
 app.route(withApiPrefix(authPrefix), authRoutes);
 
 app.route(withApiPrefix(categoriesPrefix), categoriesRoutes)
+
+app.route(withApiPrefix(transactionPrefix), transactionRoutes)
 
 
 app.get(withApiPrefix('/'), (c) => {

@@ -14,4 +14,5 @@ export enum Messages {
     CATEGORY_UPDATED = "Category updated successfully",
     CATEGORY_DELETED = "Category deleted successfully",
     CATEGORY_ID_REQUIRED = "Category ID is required",
+    TRANSACTIONS_FETCHED_SUCCESSFULLY = "Transactions fetched successfully",
 }

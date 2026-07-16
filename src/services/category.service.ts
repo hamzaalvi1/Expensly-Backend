@@ -8,7 +8,7 @@ import {
 } from "../utils/pagination";
 import { categories } from "../db/schema";
 import { db } from "../config/db";
-import { GetAllCategoriesParams } from "../types/categories.types";
+import { GetAllCategoriesParams } from "../types";
 import { CreateCategoryType, UpdateCategoryType } from "../validations/category.schema";
 import { HTTPException } from "hono/http-exception";
 import { HttpStatusCodes } from "../constants/http";
