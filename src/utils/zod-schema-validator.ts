@@ -19,7 +19,7 @@ export const zodSchemaValidator = <T extends z.ZodTypeAny>(
 ): ValidationResult<z.infer<T>> => {
   const result = schema.safeParse(data);
 
-  if (result.success) {
+  if (result.success === true) {
     return {
       success: true,
       data: result.data,

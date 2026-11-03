@@ -26,7 +26,7 @@ export const getAllCategories = async (c: Context) => {
     const page = Number(c.req.query(PAGE)) || DEFAULT_PAGINATION.PAGE;
     const limit = Number(c.req.query(LIMIT)) || DEFAULT_PAGINATION.LIMIT;
     const sortBy =
-      (c.req.query(ORDER) as SortOrder) || DEFAULT_PAGINATION.ORDER;
+      (c.req.query(ORDER) as SortOrder) || SortOrder.DESC;
     const search = c.req.query(SEARCH) || DEFAULT_PAGINATION.SEARCH;
     const userId = c.get("user").id;
     const filterBy = c.req.query(FILTER_BY) as FilterByType;
@@ -71,7 +71,7 @@ export const createCategory = async (c: Context) => {
       createCategorySchema,
       categoryData,
     );
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       return c.json(
         {
           message: validatedData.error.message,
@@ -155,7 +155,7 @@ export const updateCategory = async (c: Context) => {
       updateCategorySchema,
       categoryData,
     );
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       return c.json(
         {
           message: validatedData.error.message,

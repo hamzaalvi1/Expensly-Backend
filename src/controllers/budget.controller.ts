@@ -25,7 +25,7 @@ export const getAllBudgets = async (c: Context) => {
     const page = Number(c.req.query(PAGE)) || DEFAULT_PAGINATION.PAGE;
     const limit = Number(c.req.query(LIMIT)) || DEFAULT_PAGINATION.LIMIT;
     const sortBy =
-      (c.req.query(ORDER) as SortOrder) || DEFAULT_PAGINATION.ORDER;
+      (c.req.query(ORDER) as SortOrder) || SortOrder.DESC;
     const search = c.req.query(SEARCH) || DEFAULT_PAGINATION.SEARCH;
     const userId = c.get("user").id;
     const categoryId = c.req.query("categoryId");
@@ -92,7 +92,7 @@ export const createBudget = async (c: Context) => {
       await c.req.json(),
     );
 
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       return c.json(
         { message: validatedData.error.message, field: validatedData.error.field },
         HttpStatusCodes.BAD_REQUEST,
@@ -130,7 +130,7 @@ export const updateBudget = async (c: Context) => {
       updateBudgetSchema,
       await c.req.json(),
     );
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       return c.json(
         { message: validatedData.error.message, field: validatedData.error.field },
         HttpStatusCodes.BAD_REQUEST,
