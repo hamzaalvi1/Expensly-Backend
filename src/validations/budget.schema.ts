@@ -35,5 +35,8 @@ export const updateBudgetSchema = budgetFieldsSchema
     },
   );
 
-export type CreateBudgetType = z.infer<typeof createBudgetSchema>;
-export type UpdateBudgetType = z.infer<typeof updateBudgetSchema>;
+export type CreateBudgetType = Omit<
+  z.infer<typeof createBudgetSchema>,
+  "amount"
+> & { amount: string };
+export type UpdateBudgetType = Partial<CreateBudgetType>;
