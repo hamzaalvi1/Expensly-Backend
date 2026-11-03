@@ -1,9 +1,7 @@
 import { Pool,types } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import { getAllEnv } from "../utils/env";
-
-const env = getAllEnv();
+import { getEnv } from "../utils/env";
 
 // Set the type parser for the date type yyyy-mm-dd to Date object 1082
 types.setTypeParser(1082, (value) => 
@@ -11,7 +9,7 @@ types.setTypeParser(1082, (value) =>
 );
 
 export const pool = new Pool({
-  connectionString: env.DATABASE_URL,
+  connectionString: getEnv("DATABASE_URL"),
   ssl:{ rejectUnauthorized: false },
   connectionTimeoutMillis: 10000,
   idleTimeoutMillis: 10000,

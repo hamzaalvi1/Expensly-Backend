@@ -1,10 +1,8 @@
 import { NODE_ENV } from "../constants/env";
 import { pool } from "../config/db";
-import { getAllEnv } from "../utils/env";
+import { getEnv } from "../utils/env";
 
-const env = getAllEnv();
-
-if (env.NODE_ENV === NODE_ENV.PRODUCTION) {
+if (getEnv("NODE_ENV") === NODE_ENV.PRODUCTION) {
   throw new Error("Refusing to reset database in production");
 }
 

@@ -1,10 +1,9 @@
 import app from "./app";
 import { Context } from "hono";
-import { getAllEnv } from "./utils/env";
 import { HttpMessages, HttpStatusCodes } from "./constants/http";
 
 export default {
-  port : getAllEnv().PORT,
+  port: process.env.PORT ?? 3000,
   fetch : app.fetch,
   onerror: (error: Error,c: Context) => {
     console.error(error);

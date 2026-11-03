@@ -1,9 +1,9 @@
 import { cors } from 'hono/cors'
 import { allowedHttpMethods } from '../constants/http'
-import { getAllEnv } from '../utils/env'
+import { getEnv, parseFrontendUrls } from '../utils/env'
 
 export const corsConfig = {
-  origin: getAllEnv().FRONTEND_URLS,
+  origin: parseFrontendUrls(getEnv('FRONTEND_URLS')),
   allowHeaders: ['Content-Type', 'Authorization'],
   allowMethods: allowedHttpMethods,
 }
