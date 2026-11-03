@@ -1,4 +1,4 @@
-# Personal Finance API
+# Expensely Finance API
 
 A TypeScript backend for a personal finance application. It provides authenticated APIs for account access, income and expense transactions, categories, budgets, and transaction trends.
 
