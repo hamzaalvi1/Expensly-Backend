@@ -1,8 +1,4 @@
-declare module "bun" {
-  interface Env {
-    PORT: string;
-    FRONTEND_URLS: string;
-    DATABASE_URL: string;
-    JWT_SECRET: string;
-  }
-}
+declare const process: {
+  env: Record<string, string | undefined>;
+  exit(code?: number): never;
+};
