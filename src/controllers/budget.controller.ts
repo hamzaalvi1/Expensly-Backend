@@ -17,7 +17,11 @@ import {
 import { Messages } from "../constants/messages";
 import { HttpStatusCodes } from "../constants/http";
 import { HTTPException } from "hono/http-exception";
-import { createBudgetSchema, updateBudgetSchema } from "../validations/budget.schema";
+import {
+  CreateBudgetType,
+  createBudgetSchema,
+  updateBudgetSchema,
+} from "../validations/budget.schema";
 import { zodSchemaValidator } from "../utils/zod-schema-validator";
 
 export const getAllBudgets = async (c: Context) => {
@@ -99,7 +103,11 @@ export const createBudget = async (c: Context) => {
       );
     }
 
-    const budget = await createBudgetService(validatedData.data, userId);
+    const budgetData: CreateBudgetType = {
+      ...validatedData.data,
+      amount: validatedData.data.amount!,
+    };
+    const budget = await createBudgetService(budgetData, userId);
     return c.json(
       { message: Messages.BUDGET_CREATED, data: budget },
       HttpStatusCodes.CREATED,
