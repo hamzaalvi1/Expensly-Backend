@@ -73,7 +73,7 @@ export const getTransactions = async (c: Context) => {
     const page = Number(c.req.query(PAGE)) || DEFAULT_PAGINATION.PAGE;
     const limit = Number(c.req.query(LIMIT)) || DEFAULT_PAGINATION.LIMIT;
     const sortBy =
-      (c.req.query(ORDER) as SortOrder) || DEFAULT_PAGINATION.ORDER;
+      (c.req.query(ORDER) as SortOrder) || SortOrder.DESC;
     const search = c.req.query(SEARCH) || DEFAULT_PAGINATION.SEARCH;
     const startDate = c.req.query(START_DATE) || DEFAULT_PAGINATION.START_DATE;
     const endDate = c.req.query(END_DATE) || DEFAULT_PAGINATION.END_DATE;
@@ -115,7 +115,7 @@ export const createTransaction = async (c: Context) => {
       createTransactionSchema,
       transactionData,
     );
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       throw new HTTPException(HttpStatusCodes.BAD_REQUEST, {
         message: validatedData.error.message,
       });
@@ -179,7 +179,7 @@ export const updateTransaction = async (c: Context) => {
       updateTransactionSchema,
       transactionData,
     );
-    if (!validatedData.success) {
+    if (validatedData.success === false) {
       return c.json(
         {
           message: validatedData.error.message,
