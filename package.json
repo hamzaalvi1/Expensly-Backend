@@ -5,7 +5,8 @@
     "migration": "drizzle-kit generate --config drizzle.config.ts",
     "migration:migrate": "drizzle-kit migrate --config drizzle.config.ts",
     "migration:reset": "bun run src/db/reset.ts && bun run migration:migrate",
-    "seeds": "bun run src/seeds/index.ts"
+    "seeds": "bun run src/seeds/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun --minify --no-source-maps"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.8.0",
