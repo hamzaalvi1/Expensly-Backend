@@ -1,6 +1,5 @@
 {
   "name": "BE",
-  "type": "module",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "migration": "drizzle-kit generate --config drizzle.config.ts",
