@@ -1,0 +1,1 @@
+CREATE INDEX "idx_txn_budget_lookup" ON "transactions" USING btree ("user_id","category_id","type","transaction_date");

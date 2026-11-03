@@ -17,4 +17,14 @@ export interface GetAllTransactionsParams  {
     startDate?: string;
     endDate?: string;
     categoryId?: string;
+    type?: FilterByType;
+}
+
+export interface GetAllBudgetsParams {
+    page: number;
+    limit: number;
+    sortBy: SortOrder;
+    search: string;
+    userId: string;
+    categoryId?: string;
 }

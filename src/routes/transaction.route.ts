@@ -5,6 +5,7 @@ import {
   deleteTransaction,
   getTransactionById,
   getTransactions,
+  getTransactionTrend,
   updateTransaction,
 } from "../controllers/transactions.controller";
 
@@ -14,11 +15,18 @@ const transactionRoutes = new Hono();
 
 const transactionRoutesObject = {
   GET_TRANSACTIONS: "/all",
+  GET_TRANSACTION_TREND: "/trend",
   CREATE_TRANSACTION: "/create",
   UPDATE_TRANSACTION: "/update/:transactionId",
   DELETE_TRANSACTION: "/delete/:transactionId",
   GET_TRANSACTION: "/:transactionId",
 } as const;
+
+transactionRoutes.get(
+  transactionRoutesObject.GET_TRANSACTION_TREND,
+  authMiddleware,
+  getTransactionTrend,
+);
 
 transactionRoutes.get(
   transactionRoutesObject.GET_TRANSACTIONS,

@@ -3,6 +3,8 @@ import { HttpStatusCodes } from "../constants/http";
 import { Messages } from "../constants/messages";
 import {
   DEFAULT_PAGINATION,
+  FilterBy,
+  FilterByType,
   END_DATE,
   LIMIT,
   ORDER,
@@ -16,6 +18,7 @@ import {
   deleteTransactionService,
   getAllTransactionsService,
   getTransactionByIdService,
+  getTransactionTrendService,
   updateTransactionService,
 } from "../services/transaction.service";
 import { HTTPException } from "hono/http-exception";
@@ -26,10 +29,47 @@ import {
 } from "../validations/transaction.schema";
 import { zodSchemaValidator } from "../utils/zod-schema-validator";
 
+export const getTransactionTrend = async (c: Context) => {
+  const rawDays = c.req.query("days");
+  const days = rawDays === undefined ? 30 : Number(rawDays);
+
+  if (!Number.isInteger(days) || days < 1 || days > 365) {
+    return c.json(
+      { message: "days must be an integer between 1 and 365" },
+      HttpStatusCodes.BAD_REQUEST,
+    );
+  }
+
+  try {
+    const data = await getTransactionTrendService(c.get("user").id, days);
+
+    return c.json(
+      { message: Messages.TRANSACTIONS_FETCHED_SUCCESSFULLY, data },
+      HttpStatusCodes.OK,
+    );
+  } catch {
+    throw new HTTPException(HttpStatusCodes.INTERNAL_SERVER_ERROR, {
+      message: Messages.SOMETHING_WENT_WRONG,
+    });
+  }
+};
+
 export const getTransactions = async (c: Context) => {
   try {
     const userId = c.get("user").id;
     const categoryId = c.req.query(Query.CATEGORY_ID) || undefined;
+    const requestedType = c.req.query(Query.TYPE);
+    if (
+      requestedType &&
+      requestedType !== FilterBy.INCOME &&
+      requestedType !== FilterBy.EXPENSE
+    ) {
+      return c.json(
+        { message: "Type must be INCOME or EXPENSE" },
+        HttpStatusCodes.BAD_REQUEST,
+      );
+    }
+    const type = requestedType as FilterByType | undefined;
     const page = Number(c.req.query(PAGE)) || DEFAULT_PAGINATION.PAGE;
     const limit = Number(c.req.query(LIMIT)) || DEFAULT_PAGINATION.LIMIT;
     const sortBy =
@@ -46,6 +86,7 @@ export const getTransactions = async (c: Context) => {
       startDate,
       endDate,
       categoryId,
+      type,
     };
     const transactions = await getAllTransactionsService(
       transactionParams,

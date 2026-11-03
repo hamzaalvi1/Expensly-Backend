@@ -5,6 +5,7 @@ import { HttpMessages, HttpStatusCodes } from "./constants/http";
 import { authRoutes, authPrefix } from "./routes/auth.route";
 import { categoriesPrefix, categoriesRoutes } from "./routes/categories.route";
 import { transactionPrefix, transactionRoutes } from "./routes/transaction.route";
+import { budgetPrefix, budgetRoute } from "./routes/budget.route";
 
 const app = new Hono();
 
@@ -15,6 +16,8 @@ app.route(withApiPrefix(authPrefix), authRoutes);
 app.route(withApiPrefix(categoriesPrefix), categoriesRoutes)
 
 app.route(withApiPrefix(transactionPrefix), transactionRoutes)
+
+app.route(withApiPrefix(budgetPrefix), budgetRoute)
 
 
 app.get(withApiPrefix('/'), (c) => {
